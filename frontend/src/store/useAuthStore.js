@@ -55,5 +55,21 @@ export const useAuthStore = create((set) => ({
     } finally {
       set({ isLoggingIn: false });
     }
-  }
+  },
+
+  updateProfile: async (data) => {
+    set({ isUpdatingProfile: true });
+    try {
+      const res = await axiosInstance.put("/auth/update-profile", data);
+      set({ authUser: res.data });
+      toast.success("Profile updated successfully");
+    } catch (error) {
+      // Skontrolujte, či je error.response a správa je v správnom formáte
+      const errorMessage =
+        error.response?.data?.message || "Unknown error occurred";
+      toast.error(errorMessage);
+    } finally {
+      set({ isUpdatingProfile: false });
+    }
+  },
 }));
